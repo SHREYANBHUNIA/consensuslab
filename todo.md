@@ -22,3 +22,6 @@
 - [x] Add automated tests for election, replication, message loss, partitions, recovery, and persistence procedures.
 - [x] Add direct tests for scenario and run persistence procedure fallback behavior.
 - [x] Run type checks and automated tests, visually verify responsive rendering, and create a delivery checkpoint.
+- [x] Fix inactive orchestration desk controls, including start, step, reset, timing, message loss, partition, heal, recovery, and append actions.
+- [x] Fix inactive curated scenario selection and verify live simulation updates in the browser.
+- [x] Verify Step, Reset, and Recover Cluster action paths in the live browser workspace.

@@ -15,10 +15,36 @@ const roleCopy = {
   offline: "Unavailable",
 };
 
+const actionCopy: Record<string, string> = {
+  start: "Simulation started — synchronized ticks are now advancing.",
+  pause: "Simulation paused — use Step to inspect one transition at a time.",
+  step: "One consensus transition has been applied.",
+  reset: "Cluster reset to its healthy baseline.",
+  elect: "A new election has been requested.",
+  scenario: "Curated condition applied to the cluster.",
+  append: "A new log command has been proposed to the leader.",
+  fail: "Node failure injected into the cluster.",
+  restore: "Node restored and eligible to catch up.",
+  "toggle-link": "Network link state updated.",
+  partition: "Network partition injected.",
+  heal: "Network paths healed.",
+  recover: "Full cluster recovery has started.",
+  settings: "Transport setting updated.",
+};
+
 export default function Home() {
   const [fallback] = useState(() => createSimulation());
+  const [controlNotice, setControlNotice] = useState<string | null>(null);
+  const utils = trpc.useUtils();
   const snapshotQuery = trpc.simulation.snapshot.useQuery(undefined, { refetchInterval: 700, refetchIntervalInBackground: true });
-  const action = trpc.simulation.dispatch.useMutation({ onSuccess: () => void snapshotQuery.refetch() });
+  const action = trpc.simulation.dispatch.useMutation({
+    onSuccess: (nextSnapshot, variables) => {
+      utils.simulation.snapshot.setData(undefined, nextSnapshot);
+      setControlNotice(`${actionCopy[variables.kind] ?? "Cluster action applied."} Live state is now v${nextSnapshot.version}.`);
+      void utils.simulation.snapshot.invalidate();
+    },
+    onError: () => setControlNotice("The action could not be applied. The live connection will retry automatically."),
+  });
   const saveRun = trpc.simulation.saveRun.useMutation();
   const snapshot = snapshotQuery.data;
   const state = snapshot?.state ?? fallback;
@@ -26,7 +52,10 @@ export default function Home() {
   const summary = snapshot?.summary;
   const isWorking = action.isPending;
 
-  const dispatch = (payload: Parameters<typeof action.mutate>[0]) => action.mutate(payload);
+  const dispatch = (payload: Parameters<typeof action.mutate>[0]) => {
+    setControlNotice("Applying change to the shared cluster…");
+    action.mutate(payload);
+  };
   const selectedMeta = scenarioMeta[state.selectedScenario];
 
   return (
@@ -148,7 +177,7 @@ export default function Home() {
               <button onClick={() => dispatch({ kind: "recover" })}><HeartPulse size={15} /> recover cluster</button>
             </div>
           </div>
-          <div className="orchestrator-foot"><span><TimerReset size={14} /> {state.running ? "Clock is advancing in synchronized intervals." : "Clock is paused. Step to inspect a single transition."}</span><button className="save-run" disabled={!summary || saveRun.isPending} onClick={() => summary && saveRun.mutate({ summary: { ...summary, scenarioName: state.selectedScenario }, status: "completed" })}>{saveRun.isPending ? "saving…" : "save run summary"}</button></div>
+          <div className="orchestrator-foot"><span className="control-feedback" role="status" aria-live="polite"><TimerReset size={14} /> {controlNotice ?? (state.running ? "Clock is advancing in synchronized intervals." : "Clock is paused. Step to inspect a single transition.")}</span><button className="save-run" disabled={!summary || saveRun.isPending} onClick={() => summary && saveRun.mutate({ summary: { ...summary, scenarioName: state.selectedScenario }, status: "completed" })}>{saveRun.isPending ? "saving…" : "save run summary"}</button></div>
         </section>
       </main>
 
