@@ -26,4 +26,4 @@
 - [x] Fix inactive curated scenario selection and verify live simulation updates in the browser.
 - [x] Verify Step, Reset, and Recover Cluster action paths in the live browser workspace.
 - [x] Prepare a deployment-ready GitHub repository and upload the validated ConsensusLab project.
-- [ ] Rewrite project commit attribution to CSE - 148 - SHREYAN BHUNIA and update the GitHub history.
+- [x] Rewrite project commit attribution to CSE - 148 - SHREYAN BHUNIA and update the GitHub history.
