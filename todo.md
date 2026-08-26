@@ -25,3 +25,4 @@
 - [x] Fix inactive orchestration desk controls, including start, step, reset, timing, message loss, partition, heal, recovery, and append actions.
 - [x] Fix inactive curated scenario selection and verify live simulation updates in the browser.
 - [x] Verify Step, Reset, and Recover Cluster action paths in the live browser workspace.
+- [ ] Prepare a deployment-ready GitHub repository and upload the validated ConsensusLab project.
