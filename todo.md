@@ -1,0 +1,24 @@
+# Project TODO
+
+- [x] Define shared simulation domain types for nodes, terms, logs, messages, links, faults, events, scenarios, and run summaries.
+- [x] Implement a deterministic Raft-like simulation engine covering elections, votes, heartbeats, leader transitions, replication, commits, recovery catch-up, and consistency checks.
+- [x] Add transport semantics for latency, message loss, link isolation, and partition-aware delivery.
+- [x] Add interactive fault commands for node failure, node recovery, delay, loss, partitions, and per-link isolation.
+- [x] Add server procedures for scenario configuration, simulation state synchronization, event-log updates, and persisted run summaries.
+- [x] Add database schema and migration for saved scenario configurations and simulation run summaries.
+- [x] Add a Go reference-core structure under node, election, replication, transport, failures, simulator, api, and tests with gRPC transport contracts and SQLite integration notes.
+- [x] Add Docker configuration for the integrated development and production application.
+- [x] Add typed fault-state and run-summary contracts to the shared simulation model.
+- [x] Model queued transport timing, deterministic message loss outcomes, and visually slow links.
+- [x] Add synchronized live-state snapshot, update, and action procedures for connected viewers.
+- [x] Add written SQLite integration guidance for the Go reference core.
+- [x] Add an explicit one-click recovery workflow that heals the network and restores failed nodes.
+- [x] Add a dedicated curated partition scenario and expose it in the scenario selector.
+- [x] Build the dreamy editorial React application shell with responsive navigation and accessible controls.
+- [x] Build the D3-based cluster topology visualization with animated message flow, leader state, broken links, and partitions.
+- [x] Build replicated-log and event-stream visualizations synchronized with the simulator state.
+- [x] Add start, pause, step, reset, timing, loss, scenario, fail, restore, partition, and recovery controls.
+- [x] Provide curated scenarios demonstrating steady state, follower loss, leader isolation, partitions, and recovery.
+- [x] Add automated tests for election, replication, message loss, partitions, recovery, and persistence procedures.
+- [x] Add direct tests for scenario and run persistence procedure fallback behavior.
+- [x] Run type checks and automated tests, visually verify responsive rendering, and create a delivery checkpoint.

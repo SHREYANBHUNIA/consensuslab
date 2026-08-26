@@ -1,17 +1,7 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { int, json, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
 
-/**
- * Core user table backing auth flow.
- * Extend this file with additional tables as your product grows.
- * Columns use camelCase to match both database fields and generated types.
- */
 export const users = mysqlTable("users", {
-  /**
-   * Surrogate primary key. Auto-incremented numeric value managed by the database.
-   * Use this for relations between tables.
-   */
   id: int("id").autoincrement().primaryKey(),
-  /** Manus OAuth identifier (openId) returned from the OAuth callback. Unique per user. */
   openId: varchar("openId", { length: 64 }).notNull().unique(),
   name: text("name"),
   email: varchar("email", { length: 320 }),
@@ -22,7 +12,23 @@ export const users = mysqlTable("users", {
   lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull(),
 });
 
+export const simulationScenarios = mysqlTable("simulationScenarios", {
+  id: varchar("id", { length: 48 }).primaryKey(),
+  ownerOpenId: varchar("ownerOpenId", { length: 64 }),
+  name: varchar("name", { length: 120 }).notNull(),
+  configuration: json("configuration").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export const simulationRuns = mysqlTable("simulationRuns", {
+  id: varchar("id", { length: 48 }).primaryKey(),
+  ownerOpenId: varchar("ownerOpenId", { length: 64 }),
+  scenarioName: varchar("scenarioName", { length: 120 }).notNull(),
+  summary: json("summary").notNull(),
+  status: mysqlEnum("status", ["completed", "interrupted", "reset"]).default("completed").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
-
-// TODO: Add your tables here
